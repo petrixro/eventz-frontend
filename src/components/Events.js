@@ -9,32 +9,18 @@ const Events = () => {
   const API_URL = "https://petrix-eventz-back.herokuapp.com/api/v1/events/";
 
   function getAllEvents() {
-    axios
-      .get(API_URL, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      })
-      .then((res) => setLatestEvents(res.data));
+    axios.get(API_URL).then((res) => setLatestEvents(res.data));
   }
 
   function getEventsByType(type) {
     axios
-      .get(API_URL + "type/" + type, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      })
+      .get(API_URL + "type/" + type)
       .then((res) => setLatestEvents(res.data));
   }
 
   function getEventsByTitle(title) {
     axios
-      .get(API_URL + "title/" + title, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      })
+      .get(API_URL + "title/" + title)
       .then((res) => setLatestEvents(res.data));
   }
 

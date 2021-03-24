@@ -8,11 +8,7 @@ const Home = () => {
 
   function getAllEvents() {
     axios
-      .get("https://petrix-eventz-back.herokuapp.com:/api/v1/events/", {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      })
+      .get("https://petrix-eventz-back.herokuapp.com:/api/v1/events/")
       .then((res) => setLatestEvents(res.data));
   }
 
