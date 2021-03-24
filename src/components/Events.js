@@ -3,9 +3,10 @@ import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import Carousel from "react-bootstrap/Carousel";
 import axios from "axios";
 
-const API_URL = "https://petrix-eventz-back.herokuapp.com/api/v1/events/";
 const Events = () => {
   const [latestEvents, setLatestEvents] = useState([]);
+
+  const API_URL = "https://petrix-eventz-back.herokuapp.com/api/v1/events/";
 
   function getAllEvents() {
     axios.get(API_URL).then((res) => setLatestEvents(res.data));
