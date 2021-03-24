@@ -15,7 +15,6 @@ const LoginPage = (props) => {
         pathname: "/",
       });
       window.location.reload();
-      console.log(localStorage.getItem("user"));
     } catch (e) {
       if (e !== undefined) {
         setMessage(

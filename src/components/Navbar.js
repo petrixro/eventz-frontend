@@ -5,8 +5,7 @@ import AuthService from "..//services/AuthService";
 
 const NavbarComponent = () => {
   const [state, setState] = useState({
-    showModeratorBoard: false,
-    showAdminBoard: false,
+    showAddEventButton: false,
     currentUser: undefined,
   });
 
@@ -25,21 +24,25 @@ const NavbarComponent = () => {
   };
   return (
     <Navbar collapseOnSelect expand="lg" variant="dark">
-      <Navbar.Brand href="#home">Eventz</Navbar.Brand>
+      <Navbar.Brand href="/">
+        <img
+          src={process.env.PUBLIC_URL + "/logo.png"}
+          className="d-inline-block "
+          alt="Eventz logo"
+        />
+      </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="mr-auto">
-          <Nav.Link href="/">Home</Nav.Link>
-          <Nav.Link href="/events">Events</Nav.Link>
-          <Nav.Link href="/profile">Profile</Nav.Link>
+          <Nav.Link href="/events">Search Events</Nav.Link>
         </Nav>
         <Nav>
           {state.currentUser ? (
             <Nav>
-              <Nav.Link href="/myprofile">
+              <Nav.Link href="/myprofile" state={state.currentUser}>
                 {state.currentUser.username}
               </Nav.Link>
-              <Nav.Link href="/login" onClick={logOut}>
+              <Nav.Link href="/" onClick={logOut}>
                 Logout
               </Nav.Link>
             </Nav>

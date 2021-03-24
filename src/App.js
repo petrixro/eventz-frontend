@@ -7,6 +7,8 @@ import UserPage from "./components/UserPage";
 import NavbarComponent from "./components/Navbar";
 import RegisterPage from "./components/Register";
 import LoginPage from "./components/Login";
+import UserProfile from "./components/UserProfile";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -19,7 +21,9 @@ function App() {
           <Route path="/profile" exact component={UserPage} />
           <Route path="/register" exact component={RegisterPage} />
           <Route path="/login" exact component={LoginPage} />
+          <Route path="/myprofile" exact component={UserProfile} />
         </Switch>
+        <Footer />
       </Router>
     </div>
   );
