@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-const API_URL = "https://petrix-eventz-back.herokuapp.com/api/v1/auth/";
+const API_URL = "http://localhost:8080/api/v1/auth/";
 
 class AuthService extends React.Component {
   async registerUser(username, email, password, role) {

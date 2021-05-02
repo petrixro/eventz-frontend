@@ -6,7 +6,7 @@ import axios from "axios";
 const Events = () => {
   const [latestEvents, setLatestEvents] = useState([]);
 
-  const API_URL = "https://petrix-eventz-back.herokuapp.com/api/v1/events/";
+  const API_URL = "http://localhost:8080/api/v1/events/";
 
   function getAllEvents() {
     axios.get(API_URL).then((res) => setLatestEvents(res.data));

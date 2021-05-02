@@ -8,7 +8,7 @@ const Home = () => {
 
   function getAllEvents() {
     axios
-      .get("https://petrix-eventz-back.herokuapp.com:/api/v1/events/")
+      .get("http://localhost:8080/api/v1/events/")
       .then((res) => setLatestEvents(res.data));
   }
 
