@@ -72,10 +72,10 @@ const UserProfile = (props) => {
             </Form.Group>
             <Form.Group>
               <Form.Label>Date:&nbsp;&nbsp; </Form.Label>
-              <DateTimePicker
-                onChange={(date) => alert("New date is: ", date)}
-                value={date}
-              />
+              <DateTimePicker onChange={setDate} value={date} />
+              <Button variant="secondary" onClick={setnewDate}>
+                Close
+              </Button>
             </Form.Group>
           </Form>
         </Modal.Body>
