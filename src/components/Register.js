@@ -73,10 +73,11 @@ const RegisterPage = (props) => {
     <Container
       fluid
       style={{
-        backgroundColor: "black",
+        backgroundColor: "#28292b",
         color: "white",
         textAlign: "center",
         height: "800px",
+        paddingTop: "30px",
       }}
     >
       <h3>Register a new Account</h3>
@@ -153,7 +154,7 @@ const RegisterPage = (props) => {
             )}
           </Form.Group>
           <Form.Group>
-            <Form.Label>I am:</Form.Label>
+            <Form.Label>I want to use the platform as:</Form.Label>
             <Form.Control
               as="select"
               name="role"

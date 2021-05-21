@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import Carousel from "react-bootstrap/Carousel";
+import AuthService from "..//services/AuthService";
 import axios from "axios";
 
 const Home = () => {
+  const API_URL = "http://localhost:8080/api/v1/events/";
   const [latestEvents, setLatestEvents] = useState([]);
+  const [showBookButton, setBookButton] = useState(false);
+  const [ticketsnumber, setTickets] = useState(0);
+  const [state, setState] = useState({
+    currentUser: undefined,
+  });
+
+  useEffect(() => {
+    getAllEvents();
+    getUser();
+  }, []);
 
   function getAllEvents() {
     axios
@@ -12,14 +24,51 @@ const Home = () => {
       .then((res) => setLatestEvents(res.data));
   }
 
-  useEffect(() => {
-    getAllEvents();
-  }, []);
+  function getUser() {
+    const user = AuthService.getCurrentUser();
+    if (user) {
+      if (user.role[0] === "ROLE_USER") {
+        setBookButton(true);
+      }
+      setState({
+        currentUser: user,
+      });
+    }
+    console.log(state.currentUser);
+  }
+
+  function bookTicket(id) {
+    axios
+      .post(
+        API_URL + "tickets/" + id + "/" + state.currentUser.id,
+        { tickets: ticketsnumber },
+        {
+          headers: {
+            Authorization: `Bearer ${state.currentUser.token}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      )
+      .then((res) => getAllEvents());
+  }
+
+  function handleChange(event) {
+    event.preventDefault();
+    const { name, value } = event.target;
+
+    switch (name) {
+      case "quantity":
+        setTickets(value);
+        break;
+      default:
+        break;
+    }
+  }
 
   const eventsDiv = latestEvents.map((event) => (
     <Card
       style={{
-        backgroundColor: "black",
+        backgroundColor: "#28292b",
         borderColor: "white",
         marginBottom: "5px",
       }}
@@ -29,13 +78,44 @@ const Home = () => {
           year: "numeric",
           month: "long",
           day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
         }).format(Date.parse(event.date))}
         , {event.location}
       </Card.Header>
       <Card.Body>
         <Card.Title>{event.title}</Card.Title>
-        <Card.Text>{event.description}</Card.Text>
-        <Button variant="primary">Book Ticket</Button>
+        <Card.Text>
+          {event.description}
+          <br />
+          <small>Tickets left: {event.tickets}</small>
+        </Card.Text>
+        {showBookButton === true ? (
+          <Form>
+            <input
+              style={{ borderRadius: "5px", marginRight: "5px" }}
+              type="number"
+              id="quantity"
+              name="quantity"
+              min="1"
+              max="5"
+              onChange={handleChange}
+            ></input>
+            <Button variant="success" onClick={() => bookTicket(event.id)}>
+              Book Ticket
+            </Button>
+          </Form>
+        ) : showBookButton === false &&
+          state.currentUser !== undefined &&
+          state.currentUser.role[0] === "ROLE_COMPANY" ? (
+          <small style={{ color: "red" }}>Only USERS can book tickets!</small>
+        ) : (
+          <a href="/login">
+            <Button type="button" class="btn">
+              Login as User to Book Ticket
+            </Button>
+          </a>
+        )}
       </Card.Body>
     </Card>
   ));
@@ -91,7 +171,7 @@ const Home = () => {
             <br />
             {eventsDiv}
           </Col>
-          <Col style={{ textAlign: "right" }}>
+          {/* <Col style={{ textAlign: "right" }}>
             <h4 style={{ marginBottom: "30px" }}>Check All Categories</h4>
             <Button variant="primary" style={{ marginRight: "5px" }}>
               Concerts
@@ -111,7 +191,7 @@ const Home = () => {
             <Button variant="success" style={{ marginRight: "5px" }}>
               Stand-up
             </Button>
-          </Col>
+          </Col> */}
         </Row>
       </Container>
     </Container>

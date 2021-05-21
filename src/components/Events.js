@@ -1,15 +1,48 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
-import Carousel from "react-bootstrap/Carousel";
 import axios from "axios";
+import AuthService from "..//services/AuthService";
 
 const Events = () => {
   const [latestEvents, setLatestEvents] = useState([]);
+  const [showBookButton, setBookButton] = useState(false);
+  const [ticketsnumber, setTickets] = useState(0);
+  const [state, setState] = useState({
+    currentUser: undefined,
+  });
 
   const API_URL = "http://localhost:8080/api/v1/events/";
 
   function getAllEvents() {
     axios.get(API_URL).then((res) => setLatestEvents(res.data));
+  }
+
+  function getUser() {
+    const user = AuthService.getCurrentUser();
+    if (user) {
+      if (user.role[0] === "ROLE_USER") {
+        setBookButton(true);
+      }
+      setState({
+        currentUser: user,
+      });
+    }
+    console.log(state.currentUser);
+  }
+
+  function bookTicket(id) {
+    axios
+      .put(
+        API_URL + "tickets/" + id + "/" + state.currentUser.id,
+        ticketsnumber,
+        {
+          headers: {
+            Authorization: `Bearer ${state.currentUser.token}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      )
+      .then((res) => getAllEvents());
   }
 
   function getEventsByType(type) {
@@ -26,6 +59,7 @@ const Events = () => {
 
   useEffect(() => {
     getAllEvents();
+    getUser();
   }, []);
 
   function handleChange(event) {
@@ -34,10 +68,13 @@ const Events = () => {
 
     switch (name) {
       case "type":
-        getEventsByType(value);
+        value === "ALL" ? getAllEvents() : getEventsByType(value);
         break;
       case "title":
         value.length > 0 ? getEventsByTitle(value) : getAllEvents();
+        break;
+      case "quantity":
+        setTickets(value);
         break;
       default:
         break;
@@ -49,7 +86,7 @@ const Events = () => {
       latestEvents.map((event) => (
         <Card
           style={{
-            backgroundColor: "black",
+            backgroundColor: "#28292b",
             borderColor: "white",
             marginBottom: "5px",
           }}
@@ -59,13 +96,54 @@ const Events = () => {
               year: "numeric",
               month: "long",
               day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
             }).format(Date.parse(event.date))}
             , {event.location}
           </Card.Header>
           <Card.Body>
             <Card.Title>{event.title}</Card.Title>
-            <Card.Text>{event.description}</Card.Text>
-            <Button variant="primary">Book Ticket</Button>
+            <Card.Text>
+              {event.description}
+              <br />
+              <small>Tickets left: {event.tickets}</small>
+            </Card.Text>
+            {showBookButton === true ? (
+              <Form>
+                {/* <Form.Group>
+              <Form.Control
+                type="number"
+                name="ticket-number"
+                min="1"
+                max="5"
+              />
+            </Form.Group> */}
+                <input
+                  style={{ borderRadius: "5px", marginRight: "5px" }}
+                  type="number"
+                  id="quantity"
+                  name="quantity"
+                  min="1"
+                  max="5"
+                  onChange={handleChange}
+                ></input>
+                <Button variant="success" onClick={() => bookTicket(event.id)}>
+                  Book Ticket
+                </Button>
+              </Form>
+            ) : showBookButton === false &&
+              state.currentUser !== undefined &&
+              state.currentUser.role[0] === "ROLE_COMPANY" ? (
+              <small style={{ color: "red" }}>
+                Only USERS can book tickets!
+              </small>
+            ) : (
+              <a href="/login">
+                <Button type="button" class="btn">
+                  Login as User to Book Ticket
+                </Button>
+              </a>
+            )}
           </Card.Body>
         </Card>
       ))
@@ -76,7 +154,12 @@ const Events = () => {
   return (
     <Container
       fluid
-      style={{ backgroundColor: "black", color: "white", minHeight: "600px" }}
+      style={{
+        backgroundColor: "#28292b",
+        color: "white",
+        minHeight: "900px",
+        paddingTop: "30px",
+      }}
     >
       <Container>
         <Form>
@@ -91,6 +174,7 @@ const Events = () => {
           <Form.Group controlId="exampleForm.ControlSelect1">
             {/* <Form.Label>Search Events by Tipe</Form.Label> */}
             <Form.Control as="select" name="type" onChange={handleChange}>
+              <option>ALL</option>
               <option>CONCERT</option>
               <option>STANDUP</option>
               <option>FESTIVAL</option>

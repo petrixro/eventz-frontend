@@ -43,10 +43,11 @@ const LoginPage = (props) => {
     <Container
       fluid
       style={{
-        backgroundColor: "black",
+        backgroundColor: "#28292b",
         color: "white",
         textAlign: "center",
         height: "800px",
+        paddingTop: "30px",
       }}
     >
       <h3>Login with your Account</h3>
@@ -80,7 +81,7 @@ const LoginPage = (props) => {
               onChange={handleChange}
             />
           </Form.Group>
-          {props.location.state !== undefined && (
+          {props.location.state !== undefined && message.length === 0 && (
             <Alert variant="success">{props.location.state}</Alert>
           )}
           {message.length > 0 && message !== undefined && (

@@ -8,6 +8,7 @@ import RegisterPage from "./components/Register";
 import LoginPage from "./components/Login";
 import UserProfile from "./components/UserProfile";
 import Footer from "./components/Footer";
+import AccConfirm from "./components/AccConfirm";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/register" exact component={RegisterPage} />
           <Route path="/login" exact component={LoginPage} />
           <Route path="/myprofile" exact component={UserProfile} />
+          <Route path="/account-verified" exact component={AccConfirm} />
         </Switch>
         <Footer />
       </Router>

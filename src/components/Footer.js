@@ -13,7 +13,11 @@ const Footer = () => {
       </Row>
       <Row
         className="justify-content-center"
-        style={{ backgroundColor: "#007bff", color: "white" }}
+        style={{
+          backgroundColor: "black",
+          color: "white",
+          paddingBottom: "20px",
+        }}
       >
         <small>© 2021 Copyright: Eventz App</small>
       </Row>
